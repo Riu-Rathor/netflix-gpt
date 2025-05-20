@@ -1,11 +1,82 @@
 import Header from "./Header";
 import { LOGIN_BACKGROUND_IMG_URL } from "../utils/constant";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { checkValidData } from "../utils/validate.js";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  updateProfile,
+} from "firebase/auth";
+import { auth } from "../utils/firebase.js";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/slices/userSlice.js";
+
 const Login = () => {
   const [isSignIn, setIsSignIn] = useState(true);
-  const toggleSignInForm = () => {
+  const [errorMsg, setErrorMsg] = useState(null);
+  const email = useRef(null);
+  const password = useRef(null);
+  const fullName = useRef(null);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const toggleSignInForm = (e) => {
     setIsSignIn(!isSignIn);
   };
+
+  const handleButtonClick = () => {
+    // validate the form data
+    const message = checkValidData(email.current.value, password.current.value);
+    setErrorMsg(message);
+    if (message) return;
+
+    if (!isSignIn) {
+      // sign up logic
+      createUserWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
+        .then((userCredential) => {
+          const user = userCredential.user;
+          updateProfile(user, {
+            displayName: fullName.current.value,
+            photoURL: `https://avatars.githubusercontent.com/u/81743211?v=4`,
+          })
+            .then(() => {
+              const {uid, email, displayName, photoURL} = auth.currentUser;
+                dispatch(addUser({uid: uid, email: email, displayName: displayName, photoURL: photoURL}));
+              navigate("/browse");
+            })
+            .catch((error) => {
+              setErrorMsg(error.message);
+            });
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMsg(errorCode + "-" + errorMessage);
+        });
+    } else {
+      // sign in logic
+      signInWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
+        .then((userCredential) => {
+          const user = userCredential.user;
+          navigate("/browse");
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMsg(errorCode + "-" + errorMessage);
+        });
+    }
+  };
+
   return (
     <div>
       <Header />
@@ -14,33 +85,42 @@ const Login = () => {
         <img src={LOGIN_BACKGROUND_IMG_URL} alt="background" />
       </div>
 
-      <form className="p-12 bg-black absolute w-3/12 my-36 mx-auto right-0 left-0 text-white bg-opacity-80">
-
+      <form
+        onSubmit={(e) => e.preventDefault()}
+        className="p-12 bg-black absolute w-3/12 my-36 mx-auto right-0 left-0 text-white bg-opacity-80"
+      >
         <h1 className="font-bold text-3xl">
           {isSignIn ? "Sign In" : "Sign Up"}
         </h1>
-
-        <input
-          type="email"
-          placeholder="Email Address"
-          className="p-4 my-4 w-full bg-gray-700 rounded-lg"
-        />
 
         {!isSignIn && (
           <input
             type="text"
             placeholder="Full Name"
             className="p-4 my-4 w-full bg-gray-700 rounded-lg"
+            ref={fullName}
           />
         )}
 
         <input
-          type="password"
-          placeholder="Password"
-          className="p-4 my-4 w-full  bg-gray-700 rounded-lg"
+          type="text"
+          placeholder="Email Address"
+          className="p-4 my-4 w-full bg-gray-700 rounded-lg"
+          ref={email}
         />
 
-        <button className="p-4 my-6 bg-red-700 w-full rounded-lg">
+        <input
+          type="password"
+          placeholder="Password"
+          className="p-4 my-4 w-full bg-gray-700 rounded-lg"
+          ref={password}
+        />
+
+        <p className="text-red-500">{errorMsg}</p>
+        <button
+          className="p-4 my-6 bg-red-700 w-full rounded-lg"
+          onClick={handleButtonClick}
+        >
           {isSignIn ? "Sign In" : "Sign Up"}
         </button>
 
