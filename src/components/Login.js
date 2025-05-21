@@ -1,5 +1,5 @@
 import Header from "./Header";
-import { LOGIN_BACKGROUND_IMG_URL } from "../utils/constant";
+import { LOGIN_BACKGROUND_IMG_URL, USER_AVATAR } from "../utils/constant";
 import { useRef, useState } from "react";
 import { checkValidData } from "../utils/validate.js";
 import {
@@ -8,7 +8,6 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { auth } from "../utils/firebase.js";
-import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/slices/userSlice.js";
 
@@ -18,7 +17,6 @@ const Login = () => {
   const email = useRef(null);
   const password = useRef(null);
   const fullName = useRef(null);
-  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const toggleSignInForm = (e) => {
@@ -42,12 +40,11 @@ const Login = () => {
           const user = userCredential.user;
           updateProfile(user, {
             displayName: fullName.current.value,
-            photoURL: `https://avatars.githubusercontent.com/u/81743211?v=4`,
+            photoURL: USER_AVATAR,
           })
             .then(() => {
               const {uid, email, displayName, photoURL} = auth.currentUser;
                 dispatch(addUser({uid: uid, email: email, displayName: displayName, photoURL: photoURL}));
-              navigate("/browse");
             })
             .catch((error) => {
               setErrorMsg(error.message);
@@ -66,8 +63,6 @@ const Login = () => {
         password.current.value
       )
         .then((userCredential) => {
-          const user = userCredential.user;
-          navigate("/browse");
         })
         .catch((error) => {
           const errorCode = error.code;
