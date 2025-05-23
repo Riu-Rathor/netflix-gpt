@@ -3,11 +3,13 @@ import USER_ICON from "../assets/user-icon.jpg";
 import { signOut } from "firebase/auth";
 import { auth } from "../utils/firebase";
 import { useNavigate } from "react-router-dom";
-import { useSelector,useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { onAuthStateChanged } from "firebase/auth";
 import { addUser, removeUser } from "../utils/slices/userSlice";
 import { toggleGptSearchView } from "../utils/slices/gptSlice";
+import { SUPPORTED_LANGUAGES } from "../utils/constant";
+import { changeLang } from "../utils/slices/configSlice";
 const Header = () => {
   const dispatch = useDispatch();
   const user = useSelector((store) => store.user);
@@ -15,8 +17,7 @@ const Header = () => {
 
   const handleSignOut = () => {
     signOut(auth)
-      .then(() => {
-      })
+      .then(() => {})
       .catch((error) => {
         navigate("/error");
       });
@@ -24,6 +25,10 @@ const Header = () => {
 
   const handleGptSearchClick = () => {
     dispatch(toggleGptSearchView());
+  };
+
+  const handleLanguageChange = (e) => {
+    dispatch(changeLang(e.target.value));
   }
 
   useEffect(() => {
@@ -47,7 +52,6 @@ const Header = () => {
 
     // unsubscribe when component unmounts
     return () => unsubscribe();
-
   }, []);
 
   return (
@@ -55,9 +59,26 @@ const Header = () => {
       <img src={NETFLIX_LOGO} alt="logo" className="w-44" />
 
       <div className="flex items-center gap-2">
+        <select className="cursor-pointer text-white border border-gray-300 rounded-md px-4 py-2 shadow-sm outline-none focus:ring-0 focus:border-red-700 bg-gray-900" onChange={handleLanguageChange}>
+          {SUPPORTED_LANGUAGES.map((lang) => (
+            <option
+              key={lang.identifier}
+              value={lang.identifier}
+              className="hover:bg-red-700"
+            >
+              {lang.name}
+            </option>
+          ))}
+        </select>
+
         <img src={user?.photoURL || USER_ICON} className="w-8 h-8" />
-        <button className="py-2 px-4 bg-red-700 text-white rounded hover:bg-red-800" onClick={handleGptSearchClick}>GPT Search</button>
-        
+        <button
+          className="py-2 px-4 bg-red-700 text-white rounded hover:bg-red-800"
+          onClick={handleGptSearchClick}
+        >
+          GPT Search
+        </button>
+
         <button
           className="bg-red-700 rounded py-2 px-4 text-white pl-2 pr-2 hover:bg-red-800"
           onClick={handleSignOut}
