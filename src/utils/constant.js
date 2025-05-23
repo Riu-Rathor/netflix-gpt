@@ -17,3 +17,5 @@ export const API_OPTIONS = {
 export const MOVIES_URL = "https://api.themoviedb.org/3/movie/now_playing?page=1";
 
 export const VIDEO_BASE_URL = "https://api.themoviedb.org/3";
+
+export const MOVIE_POSTER_BASE_URL = "https://image.tmdb.org/t/p/w500";
