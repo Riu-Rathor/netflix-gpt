@@ -4,10 +4,10 @@ export const LOGIN_BACKGROUND_IMG_URL =
 export const USER_AVATAR =
   "https://avatars.githubusercontent.com/u/81743211?v=4";
 
-export const API_KEY = "8db137a49fbd6a2323e0a1d1c718d0cd";
+export const API_KEY = process.env.REACT_APP_API_KEY;
 
-export const API_ACCESS_TOKEN =
-  "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4ZGIxMzdhNDlmYmQ2YTIzMjNlMGExZDFjNzE4ZDBjZCIsIm5iZiI6MTY5Mjg2NDgzNS4zMjA5OTk5LCJzdWIiOiI2NGU3MTE0M2U4OTRhNjAxMWVmNzc0YTUiLCJzY29wZXMiOlsiYXBpX3JlYWQiXSwidmVyc2lvbiI6MX0.hlhFLnfPydPg6GghqJ9CfjrT_46tkBkNzuRn4CzFehs";
+export const API_ACCESS_TOKEN = process.env.REACT_APP_API_ACCESS_TOKEN;
+  
 
 export const API_OPTIONS = {
   method: "GET",
@@ -20,6 +20,8 @@ export const API_OPTIONS = {
 export const MOVIES_URL =
   "https://api.themoviedb.org/3/movie/now_playing?page=1";
 
+export const SEARCH_MOVIE_URL = "https://api.themoviedb.org/3/search/movie";
+
 export const VIDEO_BASE_URL = "https://api.themoviedb.org/3";
 
 export const MOVIE_POSTER_BASE_URL = "https://image.tmdb.org/t/p/w500";
@@ -29,3 +31,11 @@ export const SUPPORTED_LANGUAGES = [
   { identifier: "hindi", name: "Hindi" },
   { identifier: "spanish", name: "Spanish" },
 ];
+
+export const OPENAI_API_KEY = process.env.REACT_APP_OPENAI_API_KEY;
+  
+
+export const OPENAI_MODEL = "gpt-3.5-turbo";
+export const GEMINI_MODEL = "gemini-2.0-flash";
+
+export const GEMINI_API_KEY = process.env.REACT_APP_GEMINI_API_KEY;
