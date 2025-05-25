@@ -59,7 +59,7 @@ const Header = () => {
     <div className="absolute px-8 py-2 bg-gradient-to-b from-black z-10 w-full flex  flex-col md:flex-row md:justify-between">
       <img src={NETFLIX_LOGO} alt="logo" className="w-44 mx-auto md:mx-0" />
 
-      <div className="flex items-center gap-2">
+      <div className="justify-center flex items-center gap-2">
         {showGptSearch && (<select className="cursor-pointer text-white border border-gray-300 rounded-md px-4 py-2 shadow-sm outline-none focus:ring-0 focus:border-red-700 bg-gray-900" onChange={handleLanguageChange}>
           {SUPPORTED_LANGUAGES.map((lang) => (
             <option
