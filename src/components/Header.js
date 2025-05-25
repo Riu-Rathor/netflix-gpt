@@ -56,8 +56,8 @@ const Header = () => {
   }, []);
 
   return (
-    <div className="absolute px-8 py-2 bg-gradient-to-b from-black z-10 w-full flex justify-between">
-      <img src={NETFLIX_LOGO} alt="logo" className="w-44" />
+    <div className="absolute px-8 py-2 bg-gradient-to-b from-black z-10 w-full flex  flex-col md:flex-row md:justify-between">
+      <img src={NETFLIX_LOGO} alt="logo" className="w-44 mx-auto md:mx-0" />
 
       <div className="flex items-center gap-2">
         {showGptSearch && (<select className="cursor-pointer text-white border border-gray-300 rounded-md px-4 py-2 shadow-sm outline-none focus:ring-0 focus:border-red-700 bg-gray-900" onChange={handleLanguageChange}>
@@ -81,7 +81,7 @@ const Header = () => {
         </button>
 
         <button
-          className="bg-red-700 rounded py-2 px-4 text-white pl-2 pr-2 hover:bg-red-800"
+          className="bg-red-700 rounded py-2 p-1 text-white md:pl-2 md:pr-2 hover:bg-red-800"
           onClick={handleSignOut}
         >
           Sign Out
